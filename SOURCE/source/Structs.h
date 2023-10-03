@@ -1,18 +1,20 @@
 #pragma once
-struct IVertex
-{
-	Elite::FPoint3 pos;
-	Elite::FPoint2 uv;
-	Elite::FVector3 normal;
-	Elite::FVector3 tangent;
+#include "EMath.h"
+#include "ERGBColor.h"
+
+using namespace Elite;
+struct Ray {
+	FPoint3 origin = {};
+	FVector3 direction = {};
+	float tMin = 0.0001f;
+	float tMax = FLT_MAX;
 };
 
-struct Vertex
+struct HitRecord
 {
-	Elite::FPoint4 pos{};
-	Elite::RGBColor color{ 1,1,1 };
-	Elite::FVector2 uv{};
-	Elite::FVector3 normal{};
-	Elite::FVector3 tangent{};
-	float weight{};
+	FPoint3 hitPos = {};
+	FVector3 normal = {};
+	RGBColor color = {};
+	float tValue = {};
+	float tClosest = FLT_MAX;
 };

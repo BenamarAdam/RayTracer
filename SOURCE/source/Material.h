@@ -1,38 +1,21 @@
 #pragma once
-#include <vector>
+#include "EMath.h"
+#include "ERGBColor.h"
 
-class Texture;
-class Mesh;
-
+using namespace Elite;
+struct HitRecord;
 class Material
 {
 public:
-	Material(ID3D11Device* pDevice, const std::wstring& path);
-	Material(Material& other) = delete;
+	Material() = default;
+	virtual ~Material() = default;
+	Material(const Material& other) = delete;
 	Material(Material&& other) = delete;
-	Material operator=(Material& other) = delete;
-	Material operator=(Material&& other) = delete;
-	virtual ~Material();
+	Material& operator=(const Material& other) = delete;
+	Material& operator=(Material&& other) = delete;
 
-	ID3DX11Effect* GetEffect() const;
-	ID3DX11EffectTechnique* GetTechnique() const;
-
-	void NextTechnique();
-
-	virtual void Update(Mesh* mesh);
-
-protected:
-	ID3DX11EffectMatrixVariable* m_pWorldViewProjVariable;
-
-	void SetEffectMatrix(const std::string& matrixVariableName, ID3DX11EffectMatrixVariable* pMeshMatrix, const Elite::FMatrix4& pMeshMatrixValue);
-	void SetEffectShaderResource(const std::string& shaderVariableName, ID3DX11EffectShaderResourceVariable* pMeshShaderResource, Texture* pMeshShaderResourceValue);
-
-private:
-	ID3DX11Effect* m_pEffect;
-	std::vector<ID3DX11EffectTechnique*> m_pTechniques{};
-	unsigned int m_TechniqueIndex{ 0 };
-
-	static ID3DX11Effect* LoadEffect(ID3D11Device* pDevice, const std::wstring& path);
-	ID3DX11EffectTechnique* LoadTechnique(const std::string& techniqueName) const;
+	virtual Elite::RGBColor Shade(const HitRecord& hitRec, const Elite::FVector3& light, const Elite::FVector3& view) const = 0;
+	
+	virtual const Elite::RGBColor& GetDiffuseColor() const = 0;
 };
 

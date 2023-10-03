@@ -1,38 +1,21 @@
-﻿#pragma once
+#pragma once
+#include "Triangle.h"
+#include <string>
 #include <vector>
-#include "Geometry.h"
-#include "Structs.h"
-#include "Texture.h"
 
-enum class PrimitiveTopology
-{
-	TriangleList,
-	TriangleStrip
-};
-
-class TriangleMesh final : public Geometry
+class TriangleMesh : public Object
 {
 public:
-	TriangleMesh(const FPoint3& position, const std::vector<IVertex>& vertices, const std::vector<unsigned int>& indices, 
-		PrimitiveTopology topology = PrimitiveTopology::TriangleList);
-	~TriangleMesh() override = default;
+	TriangleMesh(const std::string filepath);
+	virtual ~TriangleMesh();
+	TriangleMesh(const TriangleMesh& other) = delete;
+	TriangleMesh(TriangleMesh&& other) = delete;
+	TriangleMesh& operator=(const TriangleMesh& other) = delete;
+	TriangleMesh& operator=(TriangleMesh&& other) = delete;
 
-	std::vector<Vertex> GetModelVerts() const override;
-
-	void Project(std::vector<Vertex>& vertices) const override;
-	bool Rasterize(std::vector<Vertex>& vertices, std::vector<float>& depthBuffer, std::vector<Vertex>& outVertices) const override;
-
+	void Update(float deltaTime) override {}
+	bool Hit(const Ray& ray, HitRecord& hitRec, bool shadowHit = false) const override;
 private:
-	std::vector<Vertex> m_ModelVertices;
-	std::vector<Vertex> m_WorldVertices;
-	std::vector<unsigned> m_Indices;
-
-	PrimitiveTopology m_Topology;
-
-	void CalcWorldVertices();
-	void OnRecalculateTransform() override;
-
-	bool RasterizeSingleTriangle(std::vector<Vertex>& triangleVertices, std::vector<float>& depthBuffer, std::vector<Vertex>& outVertices) const;
-
-	std::vector<Vertex> GetTriangleVertices(unsigned int triangleNumber, const std::vector<Vertex>& vertices) const;
+	std::vector<Triangle> m_Triangles;
 };
+

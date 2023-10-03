@@ -1,28 +1,50 @@
 #pragma once
+#include <memory>
 #include <vector>
-#include "Mesh.h"
-#include "ECamera.h"
-#include "Geometry.h"
 
-using namespace Elite;
 
-class Scene final
+class MaterialManager;
+class LightManager;
+class Camera;
+class Object;
+
+enum class RenderMode
+{
+	Both,
+	Irradiance,
+	BRDF
+};
+class Scene
 {
 public:
-	// Todo: rule of 5
-	~Scene();
 
-	void AddGeometry(Geometry* geometry);
-	void AddMesh(Mesh* geometry);
+	Scene(float width, float height);
+	virtual ~Scene();   
+	Scene(const Scene& other) = delete;
+	Scene(Scene&& other) noexcept = delete;
+	Scene& operator=(const Scene& other) = delete;
+	Scene& operator=(Scene&& other) noexcept = delete;
+	void AddObject(Object* obj);
 
-	const std::vector<Geometry*>& GetGeometries() const;
-	const std::vector<Mesh*>& GetMeshes() const;
-	Camera* GetCamera() const;
+	std::vector<Object*>& GetObjects() { return m_Objects; }
+	Camera* GetCamera() { return m_pCamera; }
 
-	void SetCamera(Camera* pCamera);
+	LightManager* GetLightManager() { return m_LightManager; }
+	MaterialManager* GetMaterialManager() { return m_MatManager; }
+	void Update(float deltaTime);
 
-private:
-	std::vector<Geometry*> m_pGeos{};
-	std::vector<Mesh*> m_pMeshes{};
-	Camera* m_pCamera{ nullptr };
+	void NextRenderMode();
+	RenderMode GetRenderMode() { return m_Rendermode; }
+
+	bool ShadowsActive() { return m_Shadows; }
+protected:
+	virtual void Initialize() = 0;
+	std::vector<Object*> m_Objects;
+	Camera* m_pCamera;
+	LightManager* m_LightManager;
+	MaterialManager* m_MatManager;
+	float m_Width;
+	float m_Height;
+	bool m_Shadows = true;
+	RenderMode m_Rendermode = RenderMode::Both;
 };

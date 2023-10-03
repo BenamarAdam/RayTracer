@@ -1,31 +1,15 @@
-#include "pch.h"
 #include "ETimer.h"
 #include "SDL.h"
 
 Elite::Timer::Timer()
-	: m_BaseTime{}
-	, m_PausedTime{}
-	, m_StopTime{}
-	, m_PreviousTime{}
-	, m_CurrentTime{}
-
-	, m_FPS{}
-	, m_FPSCount{}
-
-	, m_TotalTime{}
-	, m_ElapsedTime{}
-	, m_SecondsPerCount{ 1.0f / (float)SDL_GetPerformanceFrequency() }
-	, m_ElapsedUpperBound{ 0.03f }
-	, m_FPSTimer{}
-
-	, m_IsStopped{ true }
-	, m_ForceElapsedUpperBound{ false }
 {
+	uint64_t countsPerSecond = SDL_GetPerformanceFrequency();
+	m_SecondsPerCount = 1.0f / (float)countsPerSecond;
 }
 
 void Elite::Timer::Reset()
 {
-	uint64_t currentTime{ SDL_GetPerformanceCounter() };
+	uint64_t currentTime = SDL_GetPerformanceCounter();
 
 	m_BaseTime = currentTime;
 	m_PreviousTime = currentTime;
@@ -37,7 +21,7 @@ void Elite::Timer::Reset()
 
 void Elite::Timer::Start()
 {
-	uint64_t startTime{ SDL_GetPerformanceCounter() };
+	uint64_t startTime = SDL_GetPerformanceCounter();
 
 	if (m_IsStopped)
 	{
@@ -90,7 +74,7 @@ void Elite::Timer::Stop()
 {
 	if (!m_IsStopped)
 	{
-		uint64_t currentTime{ SDL_GetPerformanceCounter() };
+		uint64_t currentTime = SDL_GetPerformanceCounter();
 
 		m_StopTime = currentTime;
 		m_IsStopped = true;

@@ -34,23 +34,23 @@ namespace Elite
 		bool IsRunning() const { return !m_IsStopped; };
 
 	private:
-		uint64_t m_BaseTime;
-		uint64_t m_PausedTime;
-		uint64_t m_StopTime;
-		uint64_t m_PreviousTime;
-		uint64_t m_CurrentTime;
+		uint64_t m_BaseTime = 0;
+		uint64_t m_PausedTime = 0;
+		uint64_t m_StopTime = 0;
+		uint64_t m_PreviousTime = 0;
+		uint64_t m_CurrentTime = 0;
 
-		uint32_t m_FPS;
-		uint32_t m_FPSCount;
+		uint32_t m_FPS = 0;
+		uint32_t m_FPSCount = 0;
 
-		float m_TotalTime;
-		float m_ElapsedTime;
-		float m_SecondsPerCount;
-		float m_ElapsedUpperBound;
-		float m_FPSTimer;
+		float m_TotalTime = 0.0f;
+		float m_ElapsedTime = 0.0f;
+		float m_SecondsPerCount = 0.0f;
+		float m_ElapsedUpperBound = 0.03f;
+		float m_FPSTimer = 0.0f;
 
-		bool m_IsStopped;
-		bool m_ForceElapsedUpperBound;
+		bool m_IsStopped = true;
+		bool m_ForceElapsedUpperBound = false;
 	};
 }
 
